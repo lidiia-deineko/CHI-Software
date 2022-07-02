@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+</head>
+<body>
+   <h1 class="title">Current Loans</h1>
+   <div class="loans">
+    <div class="loans-items">
+        <!-- <div class="loans-item">
+            <div class="loans-item_title">Loan name 1</div>
+            <div class="loans-item_info">Loan details and values</div>
+            <button class="loans-item_btn">invest</button>
+        </div> -->
+    </div>
+    
+       <div class="loans-total-amount">
+        <span class="total-amount_title">Total amount available for investment:</span>
+        <span class="total-amount_value">000</span> 
+       </div>
+   </div>
+
+   <div class="modal-form hide">
+        <form class="modal-form_wrap">
+            <img class="form-close-img" src="images/close-btn.svg" alt="">
+            <div class="form-name">Invest in Loan</div>
+            <div class="form-title">Loan title you’ve clicked</div>
+            <div class="form-available">
+                <span class="form-available_title">Amount available:</span>
+                <span>$</span><span class="form-available_value">12,362</span>
+            </div>
+            <div class="form-term">
+                <span class="form-term_title">Loan ends in:</span>
+                <span class="form-term_value">1 month 10 days</span>
+            </div>
+            <div class="form-name">Investment amount</div>
+            <input class="form-input" type="text" autocomplete="off" id="myInput" placeholder="1,000">
+            
+            <button class="form-btn">INVEST</button>
+            <div class="modal-valid hide">
+                <span >It`s not valid!</span>
+               </div>
+        </form>
+   </div>
+
+  
+</body>
+</html>
