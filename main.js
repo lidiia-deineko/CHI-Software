@@ -1,8 +1,5 @@
 const root = 'http://localhost:3000';
 
-class ModalForm{
-    
-}
 
 class LoansList{
     list = [];
