@@ -107,7 +107,43 @@ class LoansList{
     }
 
 
-  
+    async onInvestClick(event){
+        event.preventDefault()
+        let valueInvest = this.formInput.value;
+
+        const foundLoanByID = this.getLoanByID(this.currentId);
+
+        const currentValue = foundLoanByID.available
+
+        if(String(valueInvest).includes(',')){
+            valueInvest =  Number(String(valueInvest).split(',').join('.'))
+        }
+
+        if(isNaN(valueInvest) || valueInvest == 0 || valueInvest === '' || valueInvest > currentValue){
+            this.isValid.classList.remove('hide')
+            return
+        }
+        
+        const available = (Number(foundLoanByID.available.split(',').join('.')) - valueInvest).toFixed(3);
+
+        const invested = true
+
+        await this.updateAvailableAmount(this.currentId, available, invested);
+        
+    }
+
+    async updateAvailableAmount(id, available, invested){
+
+        const response = await fetch(root + `/loans-list/${Number(id)}`, {
+            method: 'PUT',
+            body: JSON.stringify({available, invested}),
+            headers: {
+                'Content-Type': 'application/json'
+            }})
+
+        return response.json();
+    }
+
 
   
     checkForm(value){
