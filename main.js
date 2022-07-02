@@ -1,9 +1,13 @@
-const root = 'http://localhost:3000';
 
+// const root = 'http://localhost:3000';
+
+class Configuration{
+   static root = 'http://localhost:3000';
+}
 
 class LoansList{
     list = [];
-    root = null;
+    target = null;
 
     availableAmount = document.querySelector('.total-amount_value');
     modalForm = document.querySelector('.modal-form')
@@ -34,8 +38,8 @@ class LoansList{
     `
 
     constructor(target) {
-        this.root = document.querySelector(target);
-        this.root.addEventListener('click', this.openModalForm.bind(this)) 
+        this.target = document.querySelector(target);
+        this.target.addEventListener('click', this.openModalForm.bind(this)) 
     }
 
     async init() {
@@ -48,13 +52,13 @@ class LoansList{
 
     render() {
         
-            if (!this.root) {
+            if (!this.target) {
                 return;
             }
     
             const html = this.list.map(this.templateOfLists).join('');
     
-            this.root.innerHTML = html;
+            this.target.innerHTML = html;
     
             var initialValue = 0;
           
@@ -67,7 +71,7 @@ class LoansList{
     }
 
     async getList() {
-        const response = await fetch(root + '/loans-list');
+        const response = await fetch(Configuration.root + '/loans-list');
         
         this.list = await response.json();
 
@@ -87,7 +91,7 @@ class LoansList{
 
         this.formTitle.innerHTML = foundLoanByID.title
         this.formAvailableValue.innerHTML = foundLoanByID.available
-        this.formTermValue.innerHTML = foundLoanByID.term_remaining
+        // this.formTermValue.innerHTML = foundLoanByID.term_remaining
         this.formBtn.dataset.id = foundLoanByID.id
 
         this.modalForm.classList.remove('hide')
@@ -131,7 +135,7 @@ class LoansList{
 
     async updateAvailableAmount(id, available, invested){
 
-        const response = await fetch(root + `/loans-list/${Number(id)}`, {
+        const response = await fetch(Configuration.root + `/loans-list/${Number(id)}`, {
             method: 'PUT',
             body: JSON.stringify({available, invested}),
             headers: {
