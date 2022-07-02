@@ -50,6 +50,7 @@ async function loadLoansListRequest(){
 app.get('/loans-list/', (req, res) => {
    
     async function initLoadLoansListRequest(){
+        
         const loansList = await loadLoansListRequest()
 
         parsedLoansList = JSON.parse(loansList)
@@ -65,7 +66,9 @@ app.get('/loans-list/', (req, res) => {
 app.put('/loans-list/:id', (req, res) => {
     
     const {id} = req.params;
+
     const {available} = req.body;
+
     const {invested} = req.body;
 
     if (!id) {
@@ -75,17 +78,20 @@ app.put('/loans-list/:id', (req, res) => {
     }
 
     async function initLoadLoansListRequest(){
-        const loansList = await loadLoansListRequest()
+        const loansList = await loadLoansListRequest();
 
         const parsedLoansList =  JSON.parse(loansList);
 
         const loansData = parsedLoansList.loans;
 
         const foundLoan = loansData.find(({id: currentId}) => {
+
             return currentId === id;
+
         });
 
         if (!foundLoan) {
+
             res.status(401).send('Todo not found');
     
             return;
@@ -94,18 +100,18 @@ app.put('/loans-list/:id', (req, res) => {
         const changedAvailable = `${available}`.split('.').join(',')
 
         foundLoan.available = changedAvailable;
+
         foundLoan.invested = invested;
 
-        LoansListActions.writeLoansList(parsedLoansList)
+        LoansListActions.writeLoansList(parsedLoansList);
 
         res.send(true);
 
     }
 
-    initLoadLoansListRequest()
+    initLoadLoansListRequest();
 
 });
-
 
 
 app.listen(port, () => {

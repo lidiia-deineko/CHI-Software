@@ -1,17 +1,18 @@
-
-// const root = 'http://localhost:3000';
-
 class Configuration{
    static root = 'http://localhost:3000';
 }
 
 class LoansList{
+
     list = [];
     target = null;
 
-    availableAmount = document.querySelector('.total-amount_value');
-    modalForm = document.querySelector('.modal-form')
+    //elements of loans
+    loansItem = document.querySelectorAll('.loans-item')
+    loansTotalAmount = document.querySelector('.loans-total-amount')
 
+    //elements of modalForm
+    modalForm = document.querySelector('.modal-form')
     formTitle = document.querySelector('.form-title')
     formAvailableValue = document.querySelector('.form-available_value')
     formTermValue = document.querySelector('.form-term_value')
@@ -19,14 +20,12 @@ class LoansList{
     formInput = document.querySelector('.form-input')
     formCloseImg = document.querySelector('.form-close-img')
 
-    loansItem = document.querySelectorAll('.loans-item')
+    //elements of total amount
+    availableAmount = document.querySelector('.total-amount_value');
 
     isValid = document.querySelector('.modal-valid')
 
-    loansTotalAmount = document.querySelector('.loans-total-amount')
-    checkedTarget = ''
-   
-    templateOfLists = ({title, amount, available, tranche, id, invested}) =>`
+    template = ({title, amount, available, tranche, id, invested}) =>`
         <div class="loans-item">
             <div class="loans-item_title">${title}</div>
             <div class="loans-item_info"><span>Amount: </span><span>${amount}</span></div>
@@ -39,7 +38,9 @@ class LoansList{
 
     constructor(target) {
         this.target = document.querySelector(target);
-        this.target.addEventListener('click', this.openModalForm.bind(this)) 
+        this.target.addEventListener('click', this.openModalForm.bind(this));
+        this.formBtn.addEventListener('click', this.onInvestClick.bind(this));
+        this.formCloseImg.addEventListener('click', this.closeModalForm.bind(this))
     }
 
     async init() {
@@ -56,7 +57,7 @@ class LoansList{
                 return;
             }
     
-            const html = this.list.map(this.templateOfLists).join('');
+            const html = this.list.map(this.template).join('');
     
             this.target.innerHTML = html;
     
@@ -85,22 +86,25 @@ class LoansList{
         }
         const id = event.target.dataset['id'];
 
-        this.currentId = id
+        this.currentId = id;
          
-        const foundLoanByID = this.getLoanByID(id)
+        const foundLoanByID = this.getLoanByID(id);
 
-        this.formTitle.innerHTML = foundLoanByID.title
-        this.formAvailableValue.innerHTML = foundLoanByID.available
-        // this.formTermValue.innerHTML = foundLoanByID.term_remaining
-        this.formBtn.dataset.id = foundLoanByID.id
+        this.formTitle.innerHTML = foundLoanByID.title;
 
-        this.modalForm.classList.remove('hide')
+        this.formAvailableValue.innerHTML = foundLoanByID.available;
+
+        this.formBtn.dataset.id = foundLoanByID.id;
+
+        this.modalForm.classList.remove('hide');
     }
 
     closeModalForm(event){
-        this.modalForm.classList.add('hide')
-        this.formInput.value = ''
-        this.isValid.classList.add('hide')
+        this.modalForm.classList.add('hide');
+
+        this.formInput.value = '';
+
+        this.isValid.classList.add('hide');
     }
 
     getLoanByID(id) {
@@ -109,25 +113,28 @@ class LoansList{
 
 
     async onInvestClick(event){
-        event.preventDefault()
+        event.preventDefault();
+
         let valueInvest = this.formInput.value;
 
         const foundLoanByID = this.getLoanByID(this.currentId);
 
-        const currentValue = foundLoanByID.available
+        const currentValue = foundLoanByID.available;
 
         if(String(valueInvest).includes(',')){
-            valueInvest =  Number(String(valueInvest).split(',').join('.'))
+            valueInvest =  Number(String(valueInvest).split(',').join('.'));
         }
 
         if(isNaN(valueInvest) || valueInvest == 0 || valueInvest === '' || valueInvest > currentValue){
-            this.isValid.classList.remove('hide')
+
+            this.isValid.classList.remove('hide');
+
             return
         }
-        
+    
         const available = (Number(foundLoanByID.available.split(',').join('.')) - valueInvest).toFixed(3);
 
-        const invested = true
+        const invested = true;
 
         await this.updateAvailableAmount(this.currentId, available, invested);
         
@@ -145,34 +152,14 @@ class LoansList{
         return response.json();
     }
 
-
-  
-    checkForm(value){
-
-    }
-
 }
 
-window.addEventListener('load', async (event) => {
 
+window.addEventListener('load', async () => {
     const loansList = new LoansList('.loans-items');
-    await loansList.init()
+
+    await loansList.init();
+
     loansList.render();
 
-    loansList.formBtn.addEventListener('click', async (event) => {
-        
-        await loansList.onInvestClick(event)
-    })
-
-    // loansList.formInput.addEventListener('input', (event) => {
-    //     loansList.checkInput(event)
-    // })
-
-
-    loansList.formCloseImg.addEventListener('click', (event) => {
-        loansList.closeModalForm(event)
-    })
-
-
- 
 })
