@@ -25,6 +25,8 @@ class LoansList{
 
     isValid = document.querySelector('.modal-valid')
 
+    urrentId;
+
     template = ({title, amount, available, tranche, id, invested}) =>`
         <div class="loans-item">
             <div class="loans-item_title">${title}</div>
@@ -39,8 +41,13 @@ class LoansList{
     constructor(target) {
         this.target = document.querySelector(target);
         this.target.addEventListener('click', this.openModalForm.bind(this));
-        this.formBtn.addEventListener('click', this.onInvestClick.bind(this));
-        this.formCloseImg.addEventListener('click', this.closeModalForm.bind(this))
+        this.formCloseImg.addEventListener('click', this.closeModalForm.bind(this));
+        this.formBtn.addEventListener('click', async (event) => {
+            await this.onInvestClick(event)
+        })
+    
+        this.formInput.addEventListener('input', this.checkInput.bind(this));
+        
     }
 
     async init() {
@@ -115,17 +122,15 @@ class LoansList{
     async onInvestClick(event){
         event.preventDefault();
 
-        let valueInvest = this.formInput.value;
+        let valueInvest =  Number(String(this.formInput.value).split(',').join('.'));
 
         const foundLoanByID = this.getLoanByID(this.currentId);
 
-        const currentValue = foundLoanByID.available;
+        const currentValue = Number(String(foundLoanByID.available).split(',').join('.'));
 
-        if(String(valueInvest).includes(',')){
-            valueInvest =  Number(String(valueInvest).split(',').join('.'));
-        }
+        let valueDiff = currentValue - valueInvest
 
-        if(isNaN(valueInvest) || valueInvest == 0 || valueInvest === '' || valueInvest > currentValue){
+        if(isNaN(valueInvest) || valueInvest == 0 || valueInvest === '' || valueDiff < 0){
 
             this.isValid.classList.remove('hide');
 
@@ -152,10 +157,16 @@ class LoansList{
         return response.json();
     }
 
+    checkInput(){
+        if(isNaN(this.formInput.value)){
+            this.formInput.value = ''
+        }
+    }
 }
 
 
 window.addEventListener('load', async () => {
+
     const loansList = new LoansList('.loans-items');
 
     await loansList.init();

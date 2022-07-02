@@ -101,7 +101,7 @@ app.put('/loans-list/:id', (req, res) => {
 
         foundLoan.available = changedAvailable;
 
-        foundLoan.invested = invested;
+        foundLoan.invested = JSON.stringify(invested);
 
         LoansListActions.writeLoansList(parsedLoansList);
 

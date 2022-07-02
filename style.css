@@ -62,6 +62,7 @@ body{
     line-height: 24px;
     text-transform: uppercase;
     color: #303247;
+    cursor: pointer;
 }
 
 .loans-total-amount{
@@ -163,6 +164,11 @@ body{
     color: #303247;
     padding: 16px 32px;
     margin-left: 32px;
+    cursor: pointer;
+}
+
+.disable{
+    background: #ede8aa;
 }
 
 .modal-valid{
